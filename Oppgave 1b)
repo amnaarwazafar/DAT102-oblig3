@@ -1,0 +1,182 @@
+public class LenketMengde<T> implements MengdeADT<T> {
+
+private Node start;
+private int antall;
+
+public LenketMengde() {
+start = null;
+antall = 0;
+}
+
+private class Node {
+T element;
+Node neste;
+
+public Node(T element, Node neste) {
+this.element = element;
+this.neste = neste;
+}
+}
+
+public boolean erTom() {
+return antall == 0;
+}
+
+public boolean inneholder(T element) {
+Node current = start;
+while (current != null) {
+if (current.element.equals(element)) {
+return true;
+}
+current = current.neste;
+}
+return false;
+}
+
+public boolean erDelmengdeAv(MengdeADT<T> annenMengde) {
+if (annenMengde == null) {
+throw new IllegalArgumentException("Mengden kan ikke være null");
+}
+Node current = start;
+while (current != null) {
+if (!annenMengde.inneholder(current.element)) {
+return false;
+}
+current = current.neste;
+}
+return true;
+}
+
+public boolean erLik(MengdeADT<T> annenMengde) {
+if (antall != annenMengde.antallElementer()) {
+return false;
+}
+Node current = start;
+while (current != null) {
+if (!annenMengde.inneholder(current.element)) {
+return false;
+}
+current = current.neste;
+}
+return true;
+}
+
+public boolean erDisjunkt(MengdeADT<T> annenMengde) {
+Node current = start;
+while (current != null) {
+if (annenMengde.inneholder(current.element)) {
+return false;
+}
+current = current.neste;
+}
+return true;
+}
+
+public MengdeADT<T> snitt(MengdeADT<T> annenMengde) {
+LenketMengde<T> snitt = new LenketMengde<>();
+Node current = start;
+while (current != null) {
+if (annenMengde.inneholder(current.element)) {
+snitt.leggTil(current.element);
+}
+current = current.neste;
+}
+return snitt;
+}
+
+public MengdeADT<T> union(MengdeADT<T> annenMengde) {
+LenketMengde<T> union = new LenketMengde<>();
+Node current = start;
+while (current != null) {
+union.leggTil(current.element);
+current = current.neste;
+}
+for (int i = 0; i < annenMengde.antallElementer(); i++) {
+T element = annenMengde.hentElement(i);
+if (!inneholder(element)) {
+union.leggTil(element);
+}
+}
+return union;
+}
+
+public MengdeADT<T> minus(MengdeADT<T> annenMengde) {
+LenketMengde<T> differanse = new LenketMengde<>();
+Node current = start;
+while (current != null) {
+if (!annenMengde.inneholder(current.element)) {
+differanse.leggTil(current.element);
+}
+current = current.neste;
+}
+return differanse;
+}
+
+public void leggTil(T element) {
+if (!inneholder(element)) {
+Node nyNode = new Node(element, null);
+if (start == null) {
+start = nyNode;
+} else {
+Node current = start;
+while (current.neste != null) {
+current = current.neste;
+}
+current.neste = nyNode;
+}
+antall++;
+}
+}
+
+public void leggTilAlleFra(MengdeADT<T> annenMengde) {
+for (int i = 0; i < annenMengde.antallElementer(); i++) {
+T element = annenMengde.hentElement(i);
+leggTil(element);
+}
+}
+
+public T fjern(T element) {
+Node current = start;
+Node forrige = null;
+while (current != null) {
+if (current.element.equals(element)) {
+if (forrige == null) {
+start = current.neste;
+} else {
+forrige.neste = current.neste;
+}
+antall--;
+return current.element;
+}
+forrige = current;
+current = current.neste;
+}
+return null;
+}
+
+public T[] tilTabell() {
+T[] tabell = (T[]) new Object[antall];
+Node current = start;
+int i = 0;
+while (current != null) {
+tabell[i++] = current.element;
+current = current.neste;
+}
+return tabell;
+}
+
+public int antallElementer() {
+return antall;
+}
+
+public T hentElement(int indeks) {
+if (indeks < 0 || indeks >= antall) {
+throw new IndexOutOfBoundsException("Ugyldig: " + indeks);
+}
+Node current = start;
+for (int i = 0; i < indeks; i++) {
+current = current.neste;
+}
+return current.element;
+}
+}
