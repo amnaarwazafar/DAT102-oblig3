@@ -1,0 +1,85 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class JavaSetToMengdeTest {
+private JavaSetToMengde<String> set;
+
+@BeforeEach
+public void setUp() {
+set = new JavaSetToMengde<>();
+set.leggTil("A");
+set.leggTil("B");
+set.leggTil("C");
+}
+
+@Test
+public void testErTom() {
+assertFalse(set.erTom());
+set.fjern("A");
+set.fjern("B");
+set.fjern("C");
+assertTrue(set.erTom());
+}
+
+@Test
+public void testInneholder() {
+assertTrue(set.inneholder("A"));
+assertTrue(set.inneholder("E"));
+assertFalse(set.inneholder("D"));
+}
+
+@Test
+public void testErDelmengdeAv() {
+MengdeADT<String> anMengde = new JavaSetToMengde<>();
+anMengde.leggTil("A");
+anMengde.leggTil("B");
+assertTrue(set.erDelmengdeAv(anMengde));
+
+annenMengde.leggTil("D");
+assertFalse(set.erDelmengdeAv(anMengde));
+}
+
+@Test
+public void testErLik() {
+MengdeADT<String> anMengde = new JavaSetToMengde<>();
+anMengde.leggTil("A");
+anMengde.leggTil("B");
+assertTrue(set.erLik(annenMengde));
+assertFalse(set.erLik(annenMengde));
+}
+
+@Test
+public void testErDisjunktMed() {
+MengdeADT<String> anMengde = new JavaSetToMengde<>();
+anMengde.leggTil("C");
+anMengde.leggTil("D");
+assertTrue(set.erDisjunktMed(annenMengde));
+assertFalse(set.erDisjunktMed(annenMengde));
+}
+
+@Test
+public void testSnitt() {
+MengdeADT<String> anMengde = new JavaSetToMengde<>();
+anMengde.leggTil("B");
+anMengde.leggTil("C");
+MengdeADT<String> snittet = set.snitt(annenMengde);
+assertEquals(2, snittet.antallElementer());
+assertTrue(snittet.inneholder("B"));
+assertFalse(snittet.inneholder("A"));
+}
+
+@Test
+public void testUnion() {
+MengdeADT<String> anMengde = new JavaSetToMengde<>();
+anMengde.leggTil("C");
+anMengde.leggTil("D");
+MengdeADT<String> unionen = set.union(annenMengde);
+assertEquals(4, unionen.antallElementer());
+assertTrue(unionen.inneholder("A"));
+assertTrue(unionen.inneholder("B"));
+assertTrue(unionen.inneholder("C"));
+}
+
+
+}
