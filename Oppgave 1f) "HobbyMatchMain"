@@ -1,0 +1,31 @@
+public class HobbyMatchMain {
+
+    public static double match(Person a, Person b) {
+        Set<String> fellesHobbyer = new HashSet<>(a.getHobbyer());
+        fellesHobbyer.retainAll(b.getHobbyer());
+
+        Set<String> unikeHosA = new HashSet<>(a.getHobbyer());
+        unikeHosA.removeAll(b.getHobbyer());
+
+        Set<String> unikeHosB = new HashSet<>(b.getHobbyer());
+        unikeHosB.removeAll(a.getHobbyer());
+
+        int antallFelles = fellesHobbyer.size();
+        int antallKunHosDenEne = unikeHosA.size();
+        int antallKunHosDenAndre = unikeHosB.size();
+        int antallTotalt = antallFelles + antallKunHosDenEne + antallKunHosDenAndre;
+        
+        return antallFelles - (antallKunHosDenEne + antallKunHosDenAndre) / (double) antallTotalt;
+    }
+
+    public static void main(String[] args) {
+        Person arne = new Person("Arne", "jakt", "sykling", "venner", "data");
+        Person lisa = new Person("Lisa", "sykling", "yoga", "data", "matlaging");
+        Person kari = new Person("Kari", "jakt", "ski", "data", "fotografering");
+
+        System.out.println("Match mellom Arne og Lisa: " + match(arne, lisa));
+        System.out.println("Match mellom Arne og Kari: " + match(arne, kari));
+        System.out.println("Match mellom Lisa og Kari: " + match(lisa, kari));
+        System.out.println("Match mellom Arne og Arne: " + match(arne, arne)); // Dette burde gi høyest score
+    }
+}
