@@ -1,0 +1,65 @@
+package oblig3;
+
+import java.util.*;
+
+public class TimeComparison {
+    public static void main(String[] args) {
+        Set<Integer> hashSet = new HashSet<>();
+        Integer[] array = new Integer[100000];
+
+        Random random = new Random();
+        int startValue = random.nextInt(1000000);
+        int antElement = 100000;
+
+        int tall = startValue;
+        for (int i = 0; i < antElement; i++) {
+            hashSet.add(tall);
+            array[i] = tall;
+            tall = (tall + 45713) % 1000000;
+        }
+
+        Arrays.sort(array);
+
+        int[] randomNumbers = new int[10000];
+        for (int i = 0; i < 10000; i++) {
+            randomNumbers[i] = random.nextInt(1000000);
+        }
+
+        // Søk i HashSet
+        long startHashSetTime = System.currentTimeMillis();
+        int hashSetCount = 0;
+        for (int number : randomNumbers) {
+            if (hashSet.contains(number)) {
+                hashSetCount++;
+            }
+        }
+        long endHashSetTime = System.currentTimeMillis();
+        long hashSetTime = endHashSetTime - startHashSetTime;
+
+        // Søk i tabellen
+        long startBinarySearchTime = System.currentTimeMillis();
+        int binarySearchCount = 0;
+        for (int number : randomNumbers) {
+            if (Arrays.binarySearch(array, number) >= 0) {
+                binarySearchCount++;
+            }
+        }
+        long endBinarySearchTime = System.currentTimeMillis();
+        long binarySearchTime = endBinarySearchTime - startBinarySearchTime;
+
+        System.out.println("Resultater:");
+        System.out.println("Antall treff med HashSet: " + hashSetCount);
+        System.out.println("Tid brukt for søk i HashSet: " + hashSetTime + " ms");
+        System.out.println("Antall treff med binærsøk: " + binarySearchCount);
+        System.out.println("Tid brukt for binærsøk: " + binarySearchTime + " ms");
+
+        // Diskusjon / forklaring på observasjonene
+        System.out.println("Diskusjon:");
+        System.out.println("Vi observerer at søk i HashSet er betydelig raskere enn binærsøk i tabellen.");
+        System.out.println("Dette skyldes at HashSet bruker en hashfunksjon for å organisere verdiene,");
+        System.out.println("mens binærsøk i tabellen krever at tabellen er sortert på forhånd.");
+        System.out.println("Hashfunksjonen gjør søket i HashSet konstant tid O(1),");
+        System.out.println("mens binærsøk i en sortert tabell har en tidskompleksitet på O(log n).");
+        System.out.println("Med større datasett vil forskjellen i ytelse være enda mer merkbar.");
+    }
+}
