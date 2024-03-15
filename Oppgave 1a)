@@ -1,0 +1,258 @@
+package Mengde;
+
+import java.util.Arrays;
+
+
+
+public class TabellMengde<T> implements MengdeADT<T> {
+
+private static final int DEFAULT_KAPASITET = 10;
+
+
+
+
+private T[] tabell;
+private int antall;
+
+public TabellMengde() {
+this(DEFAULT_KAPASITET);
+}
+
+@SuppressWarnings("unchecked")
+public TabellMengde(int kapasitet) {
+tabell = (T[]) new Object[kapasitet];
+antall = 0;
+
+}
+
+
+public boolean erTom() {
+return antall==0;
+}
+
+/**
+* @param element
+* @return Om mengden inneholder element
+*/
+
+public int getFrequencyOf(T anMengde) {
+int frekvens = 0;
+for (int i = 0; i < antall; i++) {
+if (anMengde.equals(tabell[i])) {
+frekvens++;
+}
+}
+return frekvens;
+}
+public boolean inneholder(T el) {
+return getFrequencyOf(el) > 0;
+
+
+}
+
+/**
+* @param annenMengde
+* @return Om mengden er en delmengde av en annenMengde
+*/
+
+public boolean erDelmengdeAv(MengdeADT<T> anMengde) {
+if(anMengde == null) {
+throw new IllegalArgumentException("Kan ikke være null");
+}
+for(int i = 0; i<antall; i++) {
+T element = tabell[i];
+if(!anMengde.inneholder(element)){
+return false;
+
+}
+}return true;
+}
+
+/**
+* @param annenMengde
+* @return Om mengden er lik en annenMengde
+*/
+
+public boolean erLik(MengdeADT<T> anMengde) {
+for(int i=0;i<antall;i++) {
+T element = tabell[i];
+if(!anMengde.equals(element)) {
+return false;
+}}
+return true;
+
+
+
+}
+/**
+* @param annenMengde
+* @return Om mengden og en annenMengde er disjunkte
+*/
+
+public boolean erDisjunkt(MengdeADT<T> annenMengde) {
+for(int i = 0;i<antall;i++) {
+T element = tabell[i];
+if(annenMengde.inneholder(element)) {
+return false;
+}
+
+}
+return true;
+}
+
+
+/**
+* @param annenMengde
+* @return Snittet av mengden og en annenMengde.
+* Metoden skal ikke endre på mengden eller annenMengde,
+* men lage en ny mengde som blir resultatet.
+*/
+
+public MengdeADT<T> snitt(MengdeADT<T> anMengde){
+MengdeADT<T> snittet = new TabellMengde<>();
+
+for(int i =0; i<antall;i++) {
+T element = tabell[i];
+if(anMengde.inneholder(element)) {
+snittet.leggTil(element);
+}
+
+
+}
+return snittet;
+}
+/**
+* @param annenMengde
+* @return Unionen av mengden og en annenMengde.
+* Metoden skal ikke endre på mengden eller annenMengde,
+* men lage en ny mengde som blir resultatet.
+*/
+
+
+public MengdeADT<T> union(MengdeADT<T> anMengde){
+MengdeADT<T> un = new TabellMengde<>();
+
+for(int i =0; i<antall;i++) {
+T element = tabell[i];
+un.leggTil(element);
+}
+for(int i=0; i<anMengde.antallElementer();i++) {
+T element = anMengde.hentElement(i);
+if(!un.inneholder(element)) {
+un.leggTil(element);
+
+}
+}
+return un;
+}
+/**
+* @param annenMengde
+* @return Mengden minus annenMengde.
+* Metoden skal ikke endre på mengden eller annenMengde,
+* men lage en ny mengde som blir resultatet.
+*/
+
+
+public MengdeADT<T> minus(MengdeADT<T> anMengde){
+MengdeADT<T> m = new TabellMengde<>();
+
+for(int i=0; i<antall;i++) {
+T element = tabell[i];
+if(!anMengde.inneholder(element)) {
+m.leggTil(element);
+
+}
+}
+return m;
+}
+
+
+
+/**
+* Legger til et element i mengden. Elementet skal kun legges til hvis
+* det ikke finnes i mengden fra før.
+*
+* @param element
+*/
+
+public void leggTil(T element) {
+
+
+if(!inneholder(element)) {
+if(antall == tabell.length ) {
+leggTil(element);
+
+
+}
+tabell[antall] = element;
+antall++;
+
+}
+}
+
+
+/**
+* Legger alle elementer fra en annenMengde til i mengden. Kun elementer
+* som ikke finnes i mengden fra før, skal legges til.
+*
+* @param annenMengde
+*/
+
+public void leggTilAlleFra(MengdeADT<T> anMengde) {
+for(int i =0; i<anMengde.antallElementer();i++) {
+T element = anMengde.hentElement(i);
+if(!inneholder(element)) {
+leggTil(element);
+}
+}
+
+
+}
+
+/**
+* Fjerner og returnerer et element fra mengden. Hvis elementet ikke finnes
+* i mengden, skal metoden returnere null.
+*
+* @param element Et element som er lik det elementet som skal fjernes
+* @return Elementet som ble fjernet fra mengden, null hvis det ikke fantes.
+*/
+
+public T fjern(T element) {
+if (antall > 0) {
+element = tabell[antall - 1];
+antall--;
+return element;
+}
+return null;
+}
+
+/**
+* @return En tabell av elementene i mengden. Tabellen har størrelse lik
+* antall elementer i mengden.
+*/
+
+
+public T[] tilTabell() {
+T[] result = Arrays.copyOf(tabell, antall);
+return result;
+}
+
+
+
+
+public int antallElementer() {
+return antall;
+
+
+}
+
+
+public T hentElement(int indeks) {
+if(indeks < 0|| indeks >= antallElementer()) {
+throw new IndexOutOfBoundsException("Ugyldig indeks: " + indeks);
+}
+return elementer[indeks];
+
+}
+
+} 
