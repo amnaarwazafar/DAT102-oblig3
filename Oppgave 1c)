@@ -1,0 +1,107 @@
+import java.util.Set;
+import java.util.HashSet;
+
+
+public class JavaSetToMengde {
+private Set<T> set;
+
+public JavaSetToMengde() {
+set = new HashSet<>();
+}
+
+public erTom() {
+return set.isEmpty();
+}
+
+public boolean inneholder(T el) {
+return set.contains(el);
+}
+
+
+public boolean erDelmengdeAv(MengdeADT<T> anMengde) {
+for (T el : set) {
+if (!anMengde.inneholder(el)) {
+return false;
+}
+}
+return true;
+}
+
+public boolean erLik(MengdeADT<T> anMengde) {
+if (anMengde.antallElementer() != set.size()) {
+return false;
+}
+for (T element : set) {
+if (!anMengde.inneholder(element)) {
+return false;
+}
+}
+return true;
+}
+
+public boolean erDisjunktMed(MengdeADT<T> anMengde) {
+for (T element : set) {
+if (anMengde.inneholder(element)) {
+return false;
+}
+}
+return true;
+}
+
+public MengdeADT<T> snitt(MengdeADT<T> anMengde) {
+MengdeADT<T> snittet = new JavaSetToMengde<>();
+for (T element : set) {
+if (anMengde.inneholder(element)) {
+snittet.leggTil(element);
+}
+}
+return snittet;
+}
+
+public MengdeADT<T> union(MengdeADT<T> anMengde) {
+MengdeADT<T> unionen = new JavaSetToMengde<>();
+unionen.leggTilAlleFra(this);
+unionen.leggTilAlleFra(anMengde);
+return unionen;
+}
+
+public MengdeADT<T> differanse(MengdeADT<T> anMengde) {
+MengdeADT<T> differansen = new JavaSetToMengde<>();
+for (T el : set) {
+if (!anMengde.inneholder(el)) {
+differansen.leggTil(el);
+}
+}
+return differansen;
+}
+
+public void leggTil(T el) {
+set.add(el);
+}
+
+public void leggTilAlleFra(MengdeADT<T> anMengde) {
+for (T el : anMengde) {
+leggTil(el);
+}
+}
+
+public T fjern(T el) {
+if (inneholder(el)) {
+set.remove(el);
+return el;
+}
+return null;
+}
+
+public T[] tilTabell() {
+@SuppressWarnings("unchecked")
+T[] array = (T[]) set.toArray();
+return array;
+}
+
+public int antallElementer() {
+return set.size();
+}
+
+
+}
